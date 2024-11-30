@@ -84,15 +84,15 @@ class Service(models.Model):
 
     @property
     def host_group(self):
-        return "host_" + safe_string(self.title)
+        return f"host_{safe_string(self.title)}_{self.public_code}"
 
     @property
     def client_group(self):
-        return "client_" + safe_string(self.title)
+        return f"client_{safe_string(self.title)}_{self.public_code}"
 
     @property
     def guest_group(self):
-        return "guest_" + safe_string(self.title)
+        return f"guest_{safe_string(self.title)}_{self.public_code}"
 
 
 class Visitor(models.Model):
