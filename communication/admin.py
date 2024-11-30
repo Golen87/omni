@@ -1,13 +1,13 @@
 from django.contrib import admin
-from .models import Service, Visitor
+from .models import Service, Session
 
 
+@admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     list_display = [
         "title",
-        "visitor_count",
+        "session_count",
         "allow_public_code",
-        "allow_multiple_hosts",
         "created_on",
     ]
     fields = [
@@ -15,30 +15,31 @@ class ServiceAdmin(admin.ModelAdmin):
         "host_token",
         "client_token",
         "allow_public_code",
-        "allow_multiple_hosts",
-        "public_code",
     ]
     readonly_fields = [
         "created_on",
         "host_token",
         "client_token",
-        "public_code",
     ]
 
 
-class VisitorAdmin(admin.ModelAdmin):
+@admin.register(Session)
+class SessionAdmin(admin.ModelAdmin):
     list_display = [
         "created_on",
         "service",
+        "code",
+        "guest_count",
     ]
     fields = [
         "created_on",
         "service",
+        "code",
+        "guest_count",
     ]
     readonly_fields = [
         "created_on",
+        "service",
+        "code",
+        "guest_count",
     ]
-
-
-admin.site.register(Service, ServiceAdmin)
-admin.site.register(Visitor, VisitorAdmin)
