@@ -8,17 +8,17 @@ from .dev import *
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # Set Domain here
-ALLOWED_HOSTS = ["omni.itn.liu.se"]
-CSRF_TRUSTED_ORIGINS = ["https://omni.itn.liu.se"]
+ALLOWED_HOSTS = ["localhost", "omni.espeon.dev"]
+CSRF_TRUSTED_ORIGINS = ["https://omni.espeon.dev"]
 
 # Database
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "omni",
-        "USER": "admin",
+        "USER": "postgres",
         "PASSWORD": "password",
-        "HOST": "localhost",
+        "HOST": "127.0.0.1",
         "PORT": "5432",
     }
 }
@@ -26,6 +26,7 @@ DATABASES = {
 # Logging
 SERVER_EMAIL = "mange61@localhost"
 ADMINS = (("mange61", "mange61@localhost"),)
+"""
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,
@@ -60,6 +61,7 @@ LOGGING = {
         },
     },
 }
+"""
 
 
 # Security
