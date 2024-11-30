@@ -24,8 +24,8 @@ DATABASES = {
 }
 
 # Logging
-SERVER_EMAIL = "mange61@localhost"
-ADMINS = (("mange61", "mange61@localhost"),)
+SERVER_EMAIL = "root@localhost"
+ADMINS = (("root", "root@localhost"),)
 """
 LOGGING = {
     "version": 1,
