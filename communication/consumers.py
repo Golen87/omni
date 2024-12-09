@@ -48,6 +48,9 @@ class OmniConsumer(AsyncJsonWebsocketConsumer):
                 {"type": "on_kick", "message": "Session ended by host"},
             )
 
+        # Remove the user's channel name from Redis
+        await self.redis_delete(f"user:{self.short_name}")
+
         if self.host_group:
             await self.channel_layer.group_discard(self.host_group, self.channel_name)
 
@@ -82,11 +85,26 @@ class OmniConsumer(AsyncJsonWebsocketConsumer):
             print(f"> {self} {content}")
             return await self.authenticate(content)
 
-        # Add additional data about the sender
+        # Set message sender id
+        target_user = content.get("user")
         if not self.is_host:
             content["user"] = self.short_name
 
-        await self.channel_layer.group_send(
+        # If the message has a targeted user, send the message to the specific user's channel
+        if target_user and self.is_host:
+            channel_name = await self.redis_get(f"user:{target_user}")
+            if channel_name:
+                return await self.channel_layer.send(
+                    channel_name,
+                    {"type": "on_send", "data": content},
+                )
+            else:
+                return await self.send_json(
+                    {"type": "server_error", "message": f"User {target_user} not found"}
+                )
+
+        # Broadcast the message to the group
+        return await self.channel_layer.group_send(
             self.other_group,
             {"type": "on_send", "data": content},
         )
@@ -159,6 +177,9 @@ class OmniConsumer(AsyncJsonWebsocketConsumer):
                 "name": content.get("name", None),
             },
         )
+
+        # Store the user's channel name in Redis
+        await self.redis_set(f"user:{self.short_name}", self.channel_name)
 
     # Check if token matches a service
     async def check_token(self, token):
