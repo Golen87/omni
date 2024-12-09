@@ -152,7 +152,12 @@ class OmniConsumer(AsyncJsonWebsocketConsumer):
         # Announce that channel joined
         await self.channel_layer.group_send(
             self.other_group,
-            {"type": "on_join", "role": self.title, "user": self.short_name},
+            {
+                "type": "on_join",
+                "role": self.title,
+                "user": self.short_name,
+                "name": content.get("name", None),
+            },
         )
 
     # Check if token matches a service
@@ -176,7 +181,12 @@ class OmniConsumer(AsyncJsonWebsocketConsumer):
 
     async def on_join(self, event):
         await self.send_json(
-            {"type": "server_join", "role": event["role"], "user": event["user"]}
+            {
+                "type": "server_join",
+                "role": event["role"],
+                "user": event["user"],
+                "name": event["name"],
+            }
         )
 
     async def on_leave(self, event):
